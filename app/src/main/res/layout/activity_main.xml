@@ -1,0 +1,94 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
+    
+    
+    <LinearLayout
+        android:id="@+id/top_buttons"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_text" />
+
+        <Button
+            android:id="@+id/flush_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flush_text" />
+
+        <Button
+            android:id="@+id/export_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/export_text" />
+
+        </LinearLayout>
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_buttons"
+        android:scrollbars="none">
+
+        <TableLayout
+            android:id="@+id/space_time_rows"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_gravity="center_horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/id_column_header"
+                    android:layout_column="0"
+                    android:layout_weight="1" />
+                <TextView
+                    android:text="@string/x_coordinate_column_header"
+                    android:layout_column="1"
+                    android:layout_weight="1" />
+                <TextView
+                    android:text="@string/y_coordinate_column_header"
+                    android:layout_column="2"
+                    android:layout_weight="1" />
+                <TextView
+                    android:text="@string/time_column_header"
+                    android:layout_column="3"
+                    android:layout_weight="1" />
+            </TableRow>
+
+
+        </TableLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+
+        <Button
+            android:id="@+id/trigger_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/trigger_text" />
+
+        </LinearLayout>
+
+</RelativeLayout>

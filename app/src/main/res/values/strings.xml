@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">"Position Recorder "</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!--Top bar buttons-->
+    <string name="delete_text">Delete selected</string>
+    <string name="flush_text">Flush log</string>
+    <string name="export_text">Export</string>
+
+    <!--Main table headers-->
+    <string name="id_column_header">ID</string>
+    <string name="x_coordinate_column_header">X Coordinate</string>
+    <string name="y_coordinate_column_header">Y Coordinate</string>
+    <string name="time_column_header">Time</string>
+
+    <!--Trigger button at bottom-->
+    <string name="trigger_text">Log space-time</string>
+
+</resources>
