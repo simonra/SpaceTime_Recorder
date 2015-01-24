@@ -12,16 +12,23 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends ActionBarActivity {
+
+
+    private ArrayList logRows;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        logRows = new ArrayList();
 
     }
 
@@ -52,7 +59,6 @@ public class MainActivity extends ActionBarActivity {
         timeContent.setText("" + System.currentTimeMillis());
 
         logTable.addView(theInflatedRow);
-
     }
 
 
@@ -105,6 +111,16 @@ public class MainActivity extends ActionBarActivity {
     /**Add new entry when the trigger has been clicked*/
     public void triggerSpaceTimeRecording(View view){
         addTableEntry();
+        
+        ScrollView spaceTimeContainer = (ScrollView) findViewById(R.id.table_container);
+        spaceTimeContainer.fullScroll(ScrollView.FOCUS_DOWN);
+    }
+
+    /**Make row selected when clicked*/
+    public void deleteLastEntry(View view){
+        TableLayout spaceTimeRows = (TableLayout) findViewById(R.id.space_time_rows);
+        if(spaceTimeRows.getChildCount() <= 0) return;
+        spaceTimeRows.removeViewAt(spaceTimeRows.getChildCount() - 1);
     }
 
     private class AwesomeLocationModule {

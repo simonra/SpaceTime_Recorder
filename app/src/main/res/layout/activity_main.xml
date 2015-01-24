@@ -22,7 +22,8 @@
             android:id="@+id/delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/delete_text" />
+            android:text="@string/delete_text"
+            android:onClick="deleteLastEntry" />
 
         <Button
             android:id="@+id/flush_button"
@@ -79,12 +80,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/header_row_table"
         android:layout_above="@+id/trigger_container"
-        android:scrollbars="none">
+        android:scrollbars="none" >
 
         <TableLayout
             android:id="@+id/space_time_rows"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" >
 
 
         </TableLayout>

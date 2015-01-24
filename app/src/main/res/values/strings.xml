@@ -6,7 +6,7 @@
     <string name="action_settings">Settings</string>
 
     <!--Top bar buttons-->
-    <string name="delete_text">Delete selected</string>
+    <string name="delete_text">Delete last entry</string>
     <string name="flush_text">Flush log</string>
     <string name="export_text">Export</string>
 
