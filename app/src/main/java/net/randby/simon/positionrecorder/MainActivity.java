@@ -1,5 +1,9 @@
 package net.randby.simon.positionrecorder;
 
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,11 +24,32 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+//        Location:
+        double latitude = -1;
+        double longitude = -1;
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, false);
+        LocationListener location_Listener = new LocationListener() {
+            public void onLocationChanged(Location loc) {}
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+            public void onProviderEnabled(String provider) {}
+            public void onProviderDisabled(String provider) {}
+        };
+        locationManager.requestLocationUpdates(bestProvider, 0, 0, location_Listener);
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+        try {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }catch (NullPointerException e){
+            latitude = -1;
+            longitude = -1;
+        }
+
+//        Table inflation:
         TableLayout logTable = (TableLayout) findViewById(R.id.space_time_rows);
-
-
         LayoutInflater layoutInflater = getLayoutInflater();
-
         View theInflatedRow;
 
         for (int i = 0; i < 30; i++){
@@ -32,19 +57,15 @@ public class MainActivity extends ActionBarActivity {
 
             TextView idContent = (TextView)theInflatedRow.findViewById(R.id.id_column_content);
             idContent.setText("ID" + i);
-//            logTable.addView(idContent);
 
             TextView xContent = (TextView)theInflatedRow.findViewById(R.id.x_coordinate_column_content);
-            xContent.setText("X Pos: " + i);
-//            logTable.addView(xContent);
+            xContent.setText("X Pos: " + latitude);
 
             TextView yContent = (TextView)theInflatedRow.findViewById(R.id.y_coordinate_column_content);
-            yContent.setText("Y Pos: " + i);
-//            logTable.addView(yContent);
+            yContent.setText("Y Pos: " + longitude);
 
             TextView timeContent = (TextView)theInflatedRow.findViewById(R.id.time_column_content);
-            timeContent.setText("T Pos: " + i);
-//            logTable.addView(timeContent);
+            timeContent.setText("T Pos: " + System.currentTimeMillis());
 
             logTable.addView(theInflatedRow);
         }

@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/id_column_header"
                     android:layout_column="0"
-                    android:layout_weight="0.3" />
+                    android:layout_weight="0.7" />
                 <TextView
                     android:text="@string/x_coordinate_column_header"
                     android:layout_column="1"
