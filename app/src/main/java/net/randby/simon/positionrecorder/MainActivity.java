@@ -10,10 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.*;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 
@@ -24,51 +21,35 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+    }
 
-//        Location:
-        double latitude = -1;
-        double longitude = -1;
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, false);
-        LocationListener location_Listener = new LocationListener() {
-            public void onLocationChanged(Location loc) {}
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-            public void onProviderEnabled(String provider) {}
-            public void onProviderDisabled(String provider) {}
-        };
-        locationManager.requestLocationUpdates(bestProvider, 0, 0, location_Listener);
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-        try {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-        }catch (NullPointerException e){
-            latitude = -1;
-            longitude = -1;
-        }
+    private void addTableEntry() {
+        AwesomeLocationModule awesomeLocationModule = new AwesomeLocationModule().invoke();
+        double latitude = awesomeLocationModule.getLatitude();
+        double longitude = awesomeLocationModule.getLongitude();
+
 
 //        Table inflation:
         TableLayout logTable = (TableLayout) findViewById(R.id.space_time_rows);
         LayoutInflater layoutInflater = getLayoutInflater();
         View theInflatedRow;
 
-        for (int i = 0; i < 30; i++){
-            theInflatedRow = layoutInflater.inflate(R.layout.table_log_entry, logTable, false);
 
-            TextView idContent = (TextView)theInflatedRow.findViewById(R.id.id_column_content);
-            idContent.setText("ID" + i);
+        theInflatedRow = layoutInflater.inflate(R.layout.table_log_entry, logTable, false);
 
-            TextView xContent = (TextView)theInflatedRow.findViewById(R.id.x_coordinate_column_content);
-            xContent.setText("X Pos: " + latitude);
+        TextView idContent = (TextView)theInflatedRow.findViewById(R.id.id_column_content);
+        idContent.setText("" + 1);
 
-            TextView yContent = (TextView)theInflatedRow.findViewById(R.id.y_coordinate_column_content);
-            yContent.setText("Y Pos: " + longitude);
+        TextView xContent = (TextView)theInflatedRow.findViewById(R.id.x_coordinate_column_content);
+        xContent.setText("" + latitude);
 
-            TextView timeContent = (TextView)theInflatedRow.findViewById(R.id.time_column_content);
-            timeContent.setText("T Pos: " + System.currentTimeMillis());
+        TextView yContent = (TextView)theInflatedRow.findViewById(R.id.y_coordinate_column_content);
+        yContent.setText("" + longitude);
 
-            logTable.addView(theInflatedRow);
-        }
+        TextView timeContent = (TextView)theInflatedRow.findViewById(R.id.time_column_content);
+        timeContent.setText("" + System.currentTimeMillis());
+
+        logTable.addView(theInflatedRow);
 
     }
 
@@ -95,5 +76,56 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**Remove all current entries (use with care!)*/
+    public void flushSpaceTimeCoordinates(View view){
+        TableLayout spaceTimeRows = (TableLayout) findViewById(R.id.space_time_rows);
+        spaceTimeRows.removeAllViews();
+    }
 
+    /**Add new entry when the trigger has been clicked*/
+    public void triggerSpaceTimeRecording(View view){
+        addTableEntry();
+    }
+
+    private class AwesomeLocationModule {
+        private double latitude;
+        private double longitude;
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public AwesomeLocationModule invoke() {
+            //        Location:
+            latitude = -1;
+            longitude = -1;
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setBearingRequired(true);
+
+            String bestProvider = locationManager.getBestProvider(criteria, true);
+            LocationListener location_Listener = new LocationListener() {
+                public void onLocationChanged(Location loc) {}
+                public void onStatusChanged(String provider, int status, Bundle extras) {}
+                public void onProviderEnabled(String provider) {}
+                public void onProviderDisabled(String provider) {}
+            };
+            locationManager.requestLocationUpdates(bestProvider, 0, 0, location_Listener);
+            Location location = locationManager.getLastKnownLocation(bestProvider);
+//            locationManager.
+            try {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }catch (NullPointerException e){
+                latitude = -1;
+                longitude = -1;
+            }
+            return this;
+        }
+    }
 }
