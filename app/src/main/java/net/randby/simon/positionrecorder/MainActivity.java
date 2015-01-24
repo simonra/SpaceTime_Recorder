@@ -1,5 +1,7 @@
 package net.randby.simon.positionrecorder;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -78,8 +80,26 @@ public class MainActivity extends ActionBarActivity {
 
     /**Remove all current entries (use with care!)*/
     public void flushSpaceTimeCoordinates(View view){
-        TableLayout spaceTimeRows = (TableLayout) findViewById(R.id.space_time_rows);
-        spaceTimeRows.removeAllViews();
+
+        new AlertDialog.Builder(this)
+                .setTitle("Flush Log")
+                .setMessage("Are you sure you want to delete all the entries in the current log?")
+                .setPositiveButton("Yes, delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        TableLayout spaceTimeRows = (TableLayout) findViewById(R.id.space_time_rows);
+                        spaceTimeRows.removeAllViews();
+                    }
+                })
+                .setNegativeButton("No, abort", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Just nothing?
+                    }
+                })
+                .show();
+
+
     }
 
     /**Add new entry when the trigger has been clicked*/
