@@ -27,7 +27,7 @@ public class MainActivity extends ActionBarActivity {
 
         View theInflatedRow;
 
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < 30; i++){
             theInflatedRow = layoutInflater.inflate(R.layout.table_log_entry, logTable, false);
 
             TextView idContent = (TextView)theInflatedRow.findViewById(R.id.id_column_content);
