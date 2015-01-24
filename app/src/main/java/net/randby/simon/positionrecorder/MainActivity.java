@@ -2,6 +2,7 @@ package net.randby.simon.positionrecorder;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -23,11 +24,13 @@ public class MainActivity extends ActionBarActivity {
 
 
     private ArrayList logRows;
+    private int nextRowId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        nextRowId = 0;
         logRows = new ArrayList();
 
     }
@@ -47,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
         theInflatedRow = layoutInflater.inflate(R.layout.table_log_entry, logTable, false);
 
         TextView idContent = (TextView)theInflatedRow.findViewById(R.id.id_column_content);
-        idContent.setText("" + 1);
+        idContent.setText("" + nextRowId);
 
         TextView xContent = (TextView)theInflatedRow.findViewById(R.id.x_coordinate_column_content);
         xContent.setText("" + latitude);
@@ -57,6 +60,14 @@ public class MainActivity extends ActionBarActivity {
 
         TextView timeContent = (TextView)theInflatedRow.findViewById(R.id.time_column_content);
         timeContent.setText("" + System.currentTimeMillis());
+
+        theInflatedRow.setId(nextRowId);
+        if(nextRowId % 2 != 0){
+//            theInflatedRow.setBackgroundColor(Color.GRAY);
+            theInflatedRow.setBackgroundColor(0xffe3e3e3);
+//            general color format is 0xffHEX
+        }
+        nextRowId++;
 
         logTable.addView(theInflatedRow);
     }
@@ -95,6 +106,7 @@ public class MainActivity extends ActionBarActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         TableLayout spaceTimeRows = (TableLayout) findViewById(R.id.space_time_rows);
                         spaceTimeRows.removeAllViews();
+                        nextRowId = 0;
                     }
                 })
                 .setNegativeButton("No, abort", new DialogInterface.OnClickListener() {
@@ -111,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
     /**Add new entry when the trigger has been clicked*/
     public void triggerSpaceTimeRecording(View view){
         addTableEntry();
-        
+
         ScrollView spaceTimeContainer = (ScrollView) findViewById(R.id.table_container);
         spaceTimeContainer.fullScroll(ScrollView.FOCUS_DOWN);
     }
@@ -121,6 +133,9 @@ public class MainActivity extends ActionBarActivity {
         TableLayout spaceTimeRows = (TableLayout) findViewById(R.id.space_time_rows);
         if(spaceTimeRows.getChildCount() <= 0) return;
         spaceTimeRows.removeViewAt(spaceTimeRows.getChildCount() - 1);
+        nextRowId--;
+        ScrollView spaceTimeContainer = (ScrollView) findViewById(R.id.table_container);
+        spaceTimeContainer.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     private class AwesomeLocationModule {
