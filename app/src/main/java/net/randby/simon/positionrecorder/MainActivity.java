@@ -2,8 +2,15 @@ package net.randby.simon.positionrecorder;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup.*;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -12,6 +19,36 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TableLayout logTable = (TableLayout) findViewById(R.id.space_time_rows);
+
+
+        LayoutInflater layoutInflater = getLayoutInflater();
+
+        View theInflatedRow;
+
+        for (int i = 0; i < 3; i++){
+            theInflatedRow = layoutInflater.inflate(R.layout.table_log_entry, logTable, false);
+
+            TextView idContent = (TextView)theInflatedRow.findViewById(R.id.id_column_content);
+            idContent.setText("ID" + i);
+//            logTable.addView(idContent);
+
+            TextView xContent = (TextView)theInflatedRow.findViewById(R.id.x_coordinate_column_content);
+            xContent.setText("X Pos: " + i);
+//            logTable.addView(xContent);
+
+            TextView yContent = (TextView)theInflatedRow.findViewById(R.id.y_coordinate_column_content);
+            yContent.setText("Y Pos: " + i);
+//            logTable.addView(yContent);
+
+            TextView timeContent = (TextView)theInflatedRow.findViewById(R.id.time_column_content);
+            timeContent.setText("T Pos: " + i);
+//            logTable.addView(timeContent);
+
+            logTable.addView(theInflatedRow);
+        }
+
     }
 
 
@@ -36,4 +73,6 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
