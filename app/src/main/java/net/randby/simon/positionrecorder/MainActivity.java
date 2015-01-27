@@ -1,23 +1,32 @@
 package net.randby.simon.positionrecorder;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -25,6 +34,9 @@ public class MainActivity extends ActionBarActivity {
 
     private ArrayList logRows;
     private int nextRowId;
+    private boolean csvExportMode;
+    private boolean txtExportMode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +44,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         nextRowId = 0;
         logRows = new ArrayList();
+        csvExportMode = false;
+        txtExportMode = false;
 
     }
 
@@ -93,6 +107,66 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**Write to log file when "log" button is pressed*/
+    public void createLogFile(View view){
+        new AlertDialog.Builder(this)
+                .setTitle("Export Mode")
+                .setMessage("What format do you want to export the log with?")
+                .setPositiveButton("CSV", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        csvExportMode = true;
+                        txtExportMode = false;
+                        buildLogTextAndSave();
+                    }
+                })
+                .setNegativeButton("TXT", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        txtExportMode = true;
+                        csvExportMode = false;
+                        buildLogTextAndSave();
+                    }
+                })
+                .show();
+
+
+    }
+    public void buildLogTextAndSave(){
+        String inlineSeparator = "";
+        String rowSeparator = "";
+
+        if(csvExportMode){
+            inlineSeparator = ",";
+            rowSeparator = ",";
+        }else if(txtExportMode){
+            inlineSeparator = " ";
+            rowSeparator = "\n";
+        }else{
+            inlineSeparator = "-";
+            rowSeparator = "\n\n";
+        }
+
+        String stringToWrite = "";
+        TableLayout spaceTimeRows = (TableLayout) findViewById(R.id.space_time_rows);
+        TableRow currentRow;
+        TextView currentText;
+        for(int i = 0; i < spaceTimeRows.getChildCount(); i++){
+            currentRow = (TableRow) spaceTimeRows.getChildAt(i);
+            for (int j = 0; j <  currentRow.getChildCount();j++){
+                currentText = (TextView) currentRow.getChildAt(j);
+                stringToWrite += currentText.getText();
+                //Don't write separator at end of line
+                if(j != currentRow.getChildCount() - 1) stringToWrite += inlineSeparator;
+            }
+            //Don't write line separator after last line
+            if(i != spaceTimeRows.getChildCount() - 1) stringToWrite += rowSeparator;
+        }
+        stringToWrite += "\n";
+        System.out.println(stringToWrite);
+        writeNewLogFile("",stringToWrite);
     }
 
     /**Remove all current entries (use with care!)*/
@@ -177,6 +251,30 @@ public class MainActivity extends ActionBarActivity {
                 longitude = -1;
             }
             return this;
+        }
+    }
+
+    public void writeNewLogFile(String givenFileName, String textToWrite){
+        String targetDirectory = "SpaceTimeLogger";
+        String fileExtension;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(csvExportMode) fileExtension = ".csv";
+        else if (txtExportMode) fileExtension = ".txt";
+        else fileExtension = "";
+        String fileName = (givenFileName == "") ? "" + dateFormat.format(new Date()) + fileExtension : givenFileName + fileExtension;
+        FileOutputStream outputStream;
+
+        try {
+            File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+File.separator+targetDirectory);
+            directory.mkdirs();
+
+            File outputLogFile = new File(directory, fileName);
+            outputStream = new FileOutputStream(outputLogFile);
+            outputStream.write(textToWrite.getBytes());
+            outputStream.close();
+
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }
