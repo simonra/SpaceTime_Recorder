@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Environment;
+import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -226,12 +227,16 @@ public class MainActivity extends ActionBarActivity {
 
         public AwesomeLocationModule invoke() {
             //        Location:
+
+//            Initialize lat and lon, and get the location service
             latitude = -1;
             longitude = -1;
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+//            Find what is the best provider according to a set of criteria
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            criteria.setBearingRequired(true);
+            criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
 
             String bestProvider = locationManager.getBestProvider(criteria, true);
             LocationListener location_Listener = new LocationListener() {
@@ -240,9 +245,50 @@ public class MainActivity extends ActionBarActivity {
                 public void onProviderEnabled(String provider) {}
                 public void onProviderDisabled(String provider) {}
             };
+
+
             locationManager.requestLocationUpdates(bestProvider, 0, 0, location_Listener);
+
+
+
+//            Find and use provider that gives the best accuracy:
+            String bestFoundProvider;
+            double currentAccuracy = 999999;
+
+            bestFoundProvider = bestProvider;
             Location location = locationManager.getLastKnownLocation(bestProvider);
-//            locationManager.
+            double bestProviderAccurasy = location.getAccuracy();
+            if (bestProviderAccurasy < currentAccuracy){
+                bestFoundProvider = bestProvider;
+                currentAccuracy = bestProviderAccurasy;
+            }
+
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            double networkProviderAccuracy = location.getAccuracy();
+            if(networkProviderAccuracy < currentAccuracy){
+                bestFoundProvider = LocationManager.NETWORK_PROVIDER;
+                currentAccuracy = networkProviderAccuracy;
+            }
+
+            location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            double passiveProviderAccuracy = location.getAccuracy();
+            if(passiveProviderAccuracy < currentAccuracy){
+                bestFoundProvider = LocationManager.PASSIVE_PROVIDER;
+                currentAccuracy = passiveProviderAccuracy;
+            }
+
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            double gpsProviderAccuracy = location.getAccuracy();
+            if(gpsProviderAccuracy < currentAccuracy){
+                bestFoundProvider = LocationManager.GPS_PROVIDER;
+                currentAccuracy = gpsProviderAccuracy;
+            }
+
+            System.out.println("The best provider was: " + bestFoundProvider + ", with an accuracy of: " + currentAccuracy);
+            location = locationManager.getLastKnownLocation(bestFoundProvider);
+
+
+//            Set lat and log
             try {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
@@ -257,11 +303,12 @@ public class MainActivity extends ActionBarActivity {
     public void writeNewLogFile(String givenFileName, String textToWrite){
         String targetDirectory = "SpaceTimeLogger";
         String fileExtension;
+        String moreSpecificPartOfName = "Space-Time Log";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if(csvExportMode) fileExtension = ".csv";
         else if (txtExportMode) fileExtension = ".txt";
         else fileExtension = "";
-        String fileName = (givenFileName == "") ? "" + dateFormat.format(new Date()) + fileExtension : givenFileName + fileExtension;
+        String fileName = (givenFileName == "") ? "" + dateFormat.format(new Date()) + " " + moreSpecificPartOfName + fileExtension : givenFileName + fileExtension;
         FileOutputStream outputStream;
 
         try {
