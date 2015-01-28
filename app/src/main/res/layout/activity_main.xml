@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
-    
+
     <!--Buttons-->
     <LinearLayout
         android:id="@+id/top_buttons"
@@ -80,8 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/header_row_table"
-        android:layout_above="@+id/trigger_container"
-        android:onClick="triggerSpaceTimeRecording" >
+        android:layout_above="@+id/trigger_container" >
 
         <TableLayout
             android:id="@+id/space_time_rows"

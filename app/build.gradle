@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "net.randby.simon.positionrecorder"
+        applicationId "net.randby.simon.spacetimerecorder"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
