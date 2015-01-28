@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">"Space-Time Recorder "</string>
-    <string name="action_settings">Settings</string>
+    <!--<string name="action_settings">Settings</string>-->
 
     <!--Top bar buttons-->
     <string name="delete_text">Delete last entry</string>
@@ -11,9 +11,9 @@
 
     <!--Main table headers-->
     <string name="id_column_header">ID</string>
-    <string name="x_coordinate_column_header">X Coordinate</string>
-    <string name="y_coordinate_column_header">Y Coordinate</string>
-    <string name="time_column_header">Time</string>
+    <string name="x_coordinate_column_header">Latitude</string>
+    <string name="y_coordinate_column_header">Longitude</string>
+    <string name="time_column_header">System Time</string>
 
     <!--Trigger button at bottom-->
     <string name="trigger_text">Log space-time</string>

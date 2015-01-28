@@ -80,7 +80,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/header_row_table"
-        android:layout_above="@+id/trigger_container" >
+        android:layout_above="@+id/trigger_container"
+        android:onClick="triggerSpaceTimeRecording" >
 
         <TableLayout
             android:id="@+id/space_time_rows"

@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -100,12 +101,12 @@ public class MainActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -135,6 +136,8 @@ public class MainActivity extends ActionBarActivity {
 
 
     }
+
+    /**Build the log text from the currently gathered data (also format it for csv or txt use). */
     public void buildLogTextAndSave(){
         String inlineSeparator = "";
         String rowSeparator = "";
@@ -152,6 +155,15 @@ public class MainActivity extends ActionBarActivity {
 
         String stringToWrite = "";
         TableLayout spaceTimeRows = (TableLayout) findViewById(R.id.space_time_rows);
+//        If layout is empty, don't save anything and warn user
+        if(spaceTimeRows.getChildCount() == 0){
+
+            CharSequence toastText = "Empty log,"+ "\n" + "export failed";
+            int duration = Toast.LENGTH_LONG;
+            Toast saveToast = Toast.makeText(this, toastText, duration);
+            saveToast.show();
+            return;
+        }
         TableRow currentRow;
         TextView currentText;
         for(int i = 0; i < spaceTimeRows.getChildCount(); i++){
@@ -301,7 +313,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void writeNewLogFile(String givenFileName, String textToWrite){
-        String targetDirectory = "SpaceTimeLogger";
+        String targetDirectory = "SpaceTimeRecorder";
         String fileExtension;
         String moreSpecificPartOfName = "Space-Time Log";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -312,7 +324,7 @@ public class MainActivity extends ActionBarActivity {
         FileOutputStream outputStream;
 
         try {
-            File directory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+File.separator+targetDirectory);
+            File directory = new File(Environment.getExternalStorageDirectory()+File.separator+targetDirectory);
             directory.mkdirs();
 
             File outputLogFile = new File(directory, fileName);
@@ -320,7 +332,15 @@ public class MainActivity extends ActionBarActivity {
             outputStream.write(textToWrite.getBytes());
             outputStream.close();
 
-        } catch (Exception e){
+            CharSequence toastText = "Export successful" + "\n" + "File in /sdcard/SpaceTimeRecorder";
+            int duration = Toast.LENGTH_LONG;
+            Toast saveToast = Toast.makeText(this, toastText, duration);
+            saveToast.show();
+
+        } catch (Exception e){CharSequence toastText = "Export failed";
+            int duration = Toast.LENGTH_LONG;
+            Toast saveToast = Toast.makeText(this, toastText, duration);
+            saveToast.show();
             e.printStackTrace();
         }
     }
